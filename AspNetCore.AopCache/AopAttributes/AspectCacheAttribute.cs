@@ -1,6 +1,6 @@
-﻿using AspectCore.DynamicProxy;
+﻿using AspectCore.DependencyInjection;
+using AspectCore.DynamicProxy;
 using AspNetCore.AopCache.CacheService;
-using AspNetCore.AopCache.FrameworkBase;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
@@ -50,10 +50,10 @@ namespace AspNetCore.AopCache.AopAttributes
         public long WarningMilliseconds { get; set; } = 1000;
 
 
-        private static ILogger<AspectCacheAttribute> _logger;
-        private static ICacheService _cacheService;
-        private static ILogger<AspectCacheAttribute> Logger => _logger ?? (_logger = ServiceLocator.GetRequiredService<ILogger<AspectCacheAttribute>>());
-        private static ICacheService CacheService => _cacheService ?? (_cacheService = ServiceLocator.GetRequiredService<ICacheService>());
+        [FromServiceContext]
+        public ILogger<AspectCacheAttribute> Logger { get; set; }
+        [FromServiceContext]
+        public ICacheService CacheService { get; set; }
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
