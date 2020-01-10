@@ -23,7 +23,7 @@ namespace AspNetCore.AopCache.CacheService
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="expiration">有效期 分钟</param>
-        void SetValue(string key, object value, int expiration);
+        void SetValue(string key, object value, int? expiration);
 
         /// <summary>
         /// 尝试获取值

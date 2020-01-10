@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AopCache", "AspNetCore.AopCache.csproj", "{BAC3AC83-158F-44EC-A674-F9FCEC1D7F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AopCache", "AspNetCore.AopCache.csproj", "{BAC3AC83-158F-44EC-A674-F9FCEC1D7F0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AopCache.Demo", "..\AspNetCore.AopCache.Demo\AspNetCore.AopCache.Demo.csproj", "{E467B4CC-59F6-405C-8997-DED20FC50FD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BAC3AC83-158F-44EC-A674-F9FCEC1D7F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAC3AC83-158F-44EC-A674-F9FCEC1D7F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAC3AC83-158F-44EC-A674-F9FCEC1D7F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E467B4CC-59F6-405C-8997-DED20FC50FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E467B4CC-59F6-405C-8997-DED20FC50FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E467B4CC-59F6-405C-8997-DED20FC50FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E467B4CC-59F6-405C-8997-DED20FC50FD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

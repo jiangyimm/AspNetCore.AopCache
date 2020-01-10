@@ -1,16 +1,14 @@
-﻿using AspectCore.DependencyInjection;
-using AspectCore.DynamicProxy;
+﻿using AspectCore.DynamicProxy;
+using AspectCore.Injector;
 using AspNetCore.AopCache.CacheService;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AspNetCore.AopCache.AopAttributes
 {
     /// <summary>
-    /// 缓存属性Frame
+    /// 缓存属性
     /// <para>
     /// 1）将此属性应用于方法上，方法返回值将被缓存；
     /// </para>
@@ -25,34 +23,16 @@ namespace AspNetCore.AopCache.AopAttributes
     public class AspectCacheAttribute : AbstractInterceptorAttribute
     {
         /// <summary>
-        /// 缓存有限期，单位：分钟，默认值：10
+        /// 缓存有限期，单位：分钟，默认为null，不指定则按内部缓存时间
         /// </summary>
-        public int Expiration { get; set; } = 10;
+        public int? Expiration { get; set; }
 
         /// <summary>
         /// 缓存key值，默认为null，不指定则按内部规则产生key值
         /// </summary>
         public string CacheKey { get; set; } = null;
 
-        /// <summary>
-        /// 是否监测计时，默认为false
-        /// </summary>
-        public bool IsStopWatch { get; set; } = false;
-
-        /// <summary>
-        /// 计时日志类别，默认为‘External Api’
-        /// </summary>
-        public string Category { get; set; } = "External Api";
-
-        /// <summary>
-        /// 计时警告毫秒，默认为1000ms
-        /// </summary>
-        public long WarningMilliseconds { get; set; } = 1000;
-
-
-        [FromServiceContext]
-        public ILogger<AspectCacheAttribute> Logger { get; set; }
-        [FromServiceContext]
+        [FromContainer]
         public ICacheService CacheService { get; set; }
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
@@ -61,14 +41,7 @@ namespace AspNetCore.AopCache.AopAttributes
             //判断Method是否包含ref / out参数
             if (parameters.Any(it => it.IsIn || it.IsOut))
             {
-                if (IsStopWatch)
-                {
-                    await InvokeStopWatch(context, next);
-                }
-                else
-                {
-                    await next(context);
-                }
+                await next(context);
             }
             else
             {
@@ -96,14 +69,7 @@ namespace AspNetCore.AopCache.AopAttributes
                 }
                 else
                 {
-                    if (IsStopWatch)
-                    {
-                        await InvokeStopWatch(context, next);
-                    }
-                    else
-                    {
-                        await next(context);
-                    }
+                    await next(context);
                     dynamic returnValue = context.ReturnValue;
                     if (context.ServiceMethod.IsReturnTask())
                     {
@@ -112,24 +78,6 @@ namespace AspNetCore.AopCache.AopAttributes
 
                     CacheService.SetValue(key, (object)returnValue, Expiration);
                 }
-            }
-        }
-
-        private async Task InvokeStopWatch(AspectContext context, AspectDelegate next)
-        {
-            var stopWatch = Stopwatch.StartNew();
-            await next(context);
-            stopWatch.Stop();
-            var timeElapsed = stopWatch.ElapsedMilliseconds;
-            var methodInfo = $"{context.ServiceMethod.DeclaringType?.Namespace}.{context.ServiceMethod.DeclaringType?.Name}.{context.ServiceMethod.Name}";
-            var logMsg = $"--->>> Category:{Category};Invoke ElapsedMilliseconds:{timeElapsed};MethodInfo:{methodInfo}";
-            if (timeElapsed > WarningMilliseconds)
-            {
-                Logger.LogWarning(logMsg);
-            }
-            else
-            {
-                Logger.LogInformation(logMsg);
             }
         }
     }

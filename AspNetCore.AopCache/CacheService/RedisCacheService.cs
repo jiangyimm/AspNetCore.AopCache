@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AspNetCore.AopCache.Configuration;
+using Newtonsoft.Json;
 using ServiceStack.Redis;
 using System;
 using System.Reflection;
@@ -7,22 +8,27 @@ namespace AspNetCore.AopCache.CacheService
 {
     public class RedisCacheService : ICacheService
     {
-        private string _host = "localhost:32768";
+        private readonly ICacheConfiguration _cacheConfiguration;
+        public RedisCacheService(ICacheConfiguration cacheConfiguration)
+        {
+            _cacheConfiguration = cacheConfiguration;
+        }
+
         private RedisManagerPool _redisManagerPool;
-        public RedisManagerPool RedisManagerPool => _redisManagerPool ?? (_redisManagerPool = new RedisManagerPool(_host));
+        public RedisManagerPool RedisManagerPool => _redisManagerPool ?? (_redisManagerPool = new RedisManagerPool(_cacheConfiguration.RedisHost));
         public IRedisClient RedisClient => RedisManagerPool.GetClient();
-        public string GetCacheKey(MethodInfo method, ParameterInfo[] arguments, object[] values)
+        public virtual string GetCacheKey(MethodInfo method, ParameterInfo[] arguments, object[] values)
         {
             return new CacheKey(method, arguments, values).GetRedisCacheKey();
         }
 
-        public void SetValue(string key, object value, int expiration)
+        public virtual void SetValue(string key, object value, int? expiration)
         {
             try
             {
                 using (var redisClient = RedisManagerPool.GetClient())
                 {
-                    redisClient.Set(key, value, new TimeSpan(0, expiration, 0));
+                    redisClient.Set(key, value, new TimeSpan(0, expiration ?? _cacheConfiguration.Expiration, 0));
                 }
             }
             catch (Exception ex)
@@ -31,7 +37,7 @@ namespace AspNetCore.AopCache.CacheService
             }
         }
 
-        public bool TryGetValue(string key, out object value, Type resultType)
+        public virtual bool TryGetValue(string key, out object value, Type resultType)
         {
             try
             {
@@ -54,7 +60,7 @@ namespace AspNetCore.AopCache.CacheService
             }
         }
 
-        public object GetValue(string key)
+        public virtual object GetValue(string key)
         {
             try
             {
