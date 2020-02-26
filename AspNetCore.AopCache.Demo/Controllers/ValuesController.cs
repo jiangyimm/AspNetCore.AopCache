@@ -1,6 +1,7 @@
 ﻿using AspNetCore.AopCache.Demo.Bll;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AspNetCore.AopCache.Demo.Controllers
 {
@@ -23,9 +24,10 @@ namespace AspNetCore.AopCache.Demo.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<ActionResult<object>> Get(int id)
         {
-            return _testService.TestMethod().ToString("O");
+            var result = await _testService.TestMethodAsync();
+            return result;
         }
 
         // POST api/values

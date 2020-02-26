@@ -1,7 +1,6 @@
 ﻿using AspectCore.Extensions.DependencyInjection;
 using AspNetCore.AopCache.CacheService;
 using AspNetCore.AopCache.Demo.Bll;
-using AspNetCore.AopCache.Demo.CustomCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +36,8 @@ namespace AspNetCore.AopCache.Demo
             //services.UseMemoryCache(config => { config.Expiration = 20; });
 
             //Use Custom Cache
-            services.UseCustomCache<MyCacheService>();
-            services.UseCustomCache<OverrideCacheService>(config => { config.Expiration = 30; });
+            //services.UseCustomCache<MyCacheService>();
+            //services.UseCustomCache<OverrideCacheService>(config => { config.Expiration = 30; });
 
             return services.ConfigureDynamicProxy(p =>
             {
