@@ -16,7 +16,7 @@ namespace AspNetCore.AopCache.AopAttributes
     /// 2）后续调用此方法时，将直接从缓存取值；
     /// </para>
     /// <para>
-    /// 3）可用于DI注入的接口或者实现方法上
+    /// 3）可用于DI注入的接口或者实现方法上2
     /// </para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
