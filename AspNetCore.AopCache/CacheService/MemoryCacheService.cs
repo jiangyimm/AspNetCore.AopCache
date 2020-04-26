@@ -8,9 +8,9 @@ namespace AspNetCore.AopCache.CacheService
     public class MemoryCacheService : ICacheService
     {
         private readonly IMemoryCache _memoryCache;
-        private readonly ICacheConfiguration _cacheConfiguration;
+        private readonly ICacheOption _cacheConfiguration;
         public MemoryCacheService(IMemoryCache memoryCache,
-            ICacheConfiguration cacheConfiguration)
+            ICacheOption cacheConfiguration)
         {
             _memoryCache = memoryCache;
             _cacheConfiguration = cacheConfiguration;

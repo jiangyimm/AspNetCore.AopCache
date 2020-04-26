@@ -6,7 +6,7 @@ namespace AspNetCore.AopCache.Demo.CustomCache
 {
     public class OverrideCacheService : MemoryCacheService
     {
-        public OverrideCacheService(IMemoryCache memoryCache, ICacheConfiguration cacheConfiguration) : base(memoryCache, cacheConfiguration)
+        public OverrideCacheService(IMemoryCache memoryCache, ICacheOption cacheConfiguration) : base(memoryCache, cacheConfiguration)
         {
         }
 
