@@ -1,6 +1,6 @@
 ﻿namespace AspNetCore.AopCache.Configuration
 {
-    public interface ICacheConfiguration
+    public interface ICacheOption
     {
         /// <summary>
         /// 缓存有限期，单位：分钟，默认值：10

@@ -8,8 +8,8 @@ namespace AspNetCore.AopCache.CacheService
 {
     public class RedisCacheService : ICacheService
     {
-        private readonly ICacheConfiguration _cacheConfiguration;
-        public RedisCacheService(ICacheConfiguration cacheConfiguration)
+        private readonly ICacheOption _cacheConfiguration;
+        public RedisCacheService(ICacheOption cacheConfiguration)
         {
             _cacheConfiguration = cacheConfiguration;
         }

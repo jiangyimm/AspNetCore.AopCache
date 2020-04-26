@@ -12,9 +12,9 @@ namespace AspNetCore.AopCache.CacheService
         /// </summary>
         /// <param name="serviceCollection"></param>
         /// <param name="configure"></param>
-        public static void UseRedisCache(this IServiceCollection serviceCollection, Action<ICacheConfiguration> configure)
+        public static void AddRedisCache(this IServiceCollection serviceCollection, Action<ICacheOption> option)
         {
-            AddConfiguration(serviceCollection, configure);
+            AddOption(serviceCollection, option);
             serviceCollection.AddSingleton<ICacheService, RedisCacheService>();
         }
 
@@ -23,11 +23,11 @@ namespace AspNetCore.AopCache.CacheService
         /// </summary>
         /// <param name="serviceCollection"></param>
         /// <param name="configure"></param>
-        public static void UseMemoryCache(this IServiceCollection serviceCollection, Action<ICacheConfiguration> configure = null)
+        public static void AddMemoryCache(this IServiceCollection serviceCollection, Action<ICacheOption> option = null)
         {
-            if (configure != null)
+            if (option != null)
             {
-                AddConfiguration(serviceCollection, configure);
+                AddOption(serviceCollection, option);
             }
             serviceCollection.AddMemoryCache();
             serviceCollection.AddSingleton<ICacheService, MemoryCacheService>();
@@ -39,30 +39,30 @@ namespace AspNetCore.AopCache.CacheService
         /// <typeparam name="TCacheService">自定义的缓存实现</typeparam>
         /// <param name="serviceCollection"></param>
         /// <param name="configure"></param>
-        public static void UseCustomCache<TCacheService>(this IServiceCollection serviceCollection, Action<ICacheConfiguration> configure = null)
+        public static void AddCustomCache<TCacheService>(this IServiceCollection serviceCollection, Action<ICacheOption> option = null)
          where TCacheService : class, ICacheService
         {
-            if (configure != null)
+            if (option != null)
             {
-                AddConfiguration(serviceCollection, configure);
+                AddOption(serviceCollection, option);
             }
             serviceCollection.AddSingleton<ICacheService, TCacheService>();
         }
 
-        private static void AddConfiguration(this IServiceCollection serviceCollection, Action<ICacheConfiguration> configure)
+        private static void AddOption(this IServiceCollection serviceCollection, Action<ICacheOption> option)
         {
-            if (configure == null)
-                throw new ArgumentNullException(nameof(configure));
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
             var serviceDescriptor = serviceCollection.LastOrDefault(x =>
             {
-                if (x.ServiceType == typeof(ICacheConfiguration))
+                if (x.ServiceType == typeof(ICacheOption))
                     return x.ImplementationInstance != null;
                 return false;
             });
-            var implementationInstance = (ICacheConfiguration)serviceDescriptor?.ImplementationInstance ?? new CacheConfiguration();
-            configure(implementationInstance);
+            var implementationInstance = (ICacheOption)serviceDescriptor?.ImplementationInstance ?? new CacheOption();
+            option(implementationInstance);
             if (serviceDescriptor == null)
                 serviceCollection.AddSingleton(implementationInstance);
         }

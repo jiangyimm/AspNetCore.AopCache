@@ -26,18 +26,18 @@ namespace AspNetCore.AopCache.Demo
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Use Redis Cache
-            services.UseRedisCache(config =>
+            services.AddRedisCache(config =>
             {
                 config.Expiration = 20;
                 config.RedisHost = "localhost:32768";
             });
 
             //Use Memory Cache
-            //services.UseMemoryCache(config => { config.Expiration = 20; });
+            //services.AddMemoryCache(config => { config.Expiration = 20; });
 
             //Use Custom Cache
-            //services.UseCustomCache<MyCacheService>();
-            //services.UseCustomCache<OverrideCacheService>(config => { config.Expiration = 30; });
+            //services.AddCustomCache<MyCacheService>();
+            //services.AddCustomCache<OverrideCacheService>(config => { config.Expiration = 30; });
 
             return services.ConfigureDynamicProxy(p =>
             {
